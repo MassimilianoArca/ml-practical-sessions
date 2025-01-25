@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "ml-practical-sessions"
+version = "0.1.0"
+description = ""
+authors = ["Massimiliano Arca <massimiliano.arca@polimi.it>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11, <3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
