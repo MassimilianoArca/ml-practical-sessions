@@ -21,6 +21,9 @@ xgboost = "^2.1.3"
 mlxtend = "^0.23.4"
 tqdm = "^4.67.1"
 seaborn = "^0.13.2"
+miceforest = "^6.0.3"
+copkmeans = {git = "https://github.com/Behrouz-Babaki/COP-Kmeans"}
+gower = "^0.1.2"
 
 
 [build-system]
