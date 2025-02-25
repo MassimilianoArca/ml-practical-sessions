@@ -24,6 +24,7 @@ seaborn = "^0.13.2"
 miceforest = "^6.0.3"
 copkmeans = {git = "https://github.com/Behrouz-Babaki/COP-Kmeans"}
 gower = "^0.1.2"
+bayesian-optimization = "^2.0.3"
 
 
 [build-system]

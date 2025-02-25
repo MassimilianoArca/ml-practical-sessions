@@ -168,6 +168,23 @@ files = [
 dev = ["freezegun (>=1.0,<2.0)", "pytest (>=6.0)", "pytest-cov"]
 
 [[package]]
+name = "bayesian-optimization"
+version = "2.0.3"
+description = "Bayesian Optimization package"
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "bayesian_optimization-2.0.3-py3-none-any.whl", hash = "sha256:73d08237c46a1787c17333aeaae3e41c5fab8e58a68d979645b70e72ba22b63d"},
+    {file = "bayesian_optimization-2.0.3.tar.gz", hash = "sha256:2fd4bff8b2e5dda2d658ab66b57a2f39e6dc2c36ba5489878e45499c732cdf44"},
+]
+
+[package.dependencies]
+colorama = ">=0.4.6,<0.5.0"
+numpy = ">=1.25"
+scikit-learn = ">=1.0.0,<2.0.0"
+scipy = {version = ">=1.0.0,<2.0.0", markers = "python_version < \"3.13\""}
+
+[[package]]
 name = "beautifulsoup4"
 version = "4.12.3"
 description = "Screen-scraping library"
@@ -3330,4 +3347,4 @@ scikit-learn = ["scikit-learn"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11, <3.12"
-content-hash = "b03b33eb82d26b570adc495e041536db168d14991e3b9ed4d9e90d308245c288"
+content-hash = "80574740230c32259ab437733d9d78a3fd76ff79b5b8fe4039b9159d307f014d"
