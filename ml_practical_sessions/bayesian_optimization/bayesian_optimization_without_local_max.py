@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from bayes_opt import BayesianOptimization, acquisition
+from matplotlib import gridspec
 from mpl_toolkits.mplot3d import Axes3D
 
 # === FUNCTIONS ===
@@ -36,7 +37,12 @@ def plot_gp(optimizer, pH, Temperature):
     )
     
     gs = plt.GridSpec(2, 1, height_ratios=[2, 2]) # type: ignore
-    axis = plt.subplot(gs[0], projection='3d')
+    
+    gs_top = gridspec.GridSpecFromSubplotSpec(1, 3, subplot_spec=gs[0])
+    axis_3d = plt.subplot(gs_top[0], projection='3d')
+    axis_ph = plt.subplot(gs_top[1])
+    axis_temp = plt.subplot(gs_top[2])
+    
     acq = plt.subplot(gs[1], projection='3d')
     
     # get the points that have been evaluated until now
@@ -54,18 +60,33 @@ def plot_gp(optimizer, pH, Temperature):
     sigma = sigma.reshape(pH.shape)
 
     # Plot the Gaussian Process mean and the 95% credible interval
-    axis.plot_surface(pH, Temperature, mu, color='royalblue', alpha=0.8) # type: ignore
-    axis.plot_surface(pH, Temperature, mu + 1.96 * sigma, color='blue', alpha=0.5) # type: ignore
-    axis.plot_surface(pH, Temperature, mu - 1.96 * sigma, color='royalblue', alpha=0.5) # type: ignore
+    axis_3d.plot_surface(pH, Temperature, mu, color='royalblue', alpha=0.8) # type: ignore
+    axis_3d.plot_surface(pH, Temperature, mu + 1.96 * sigma, color='blue', alpha=0.5) # type: ignore
+    axis_3d.plot_surface(pH, Temperature, mu - 1.96 * sigma, color='royalblue', alpha=0.5) # type: ignore
     
     # Plot the points that have been evaluated
-    axis.scatter(pH_obs.flatten(), Temperature_obs.flatten(), efficiency_obs, color='r', s=50, label='Observations') # type: ignore
-    axis.set_xlabel('pH')
-    axis.set_ylabel('Temperature')
-    axis.set_zlabel('Efficiency') # type: ignore
-    axis.set_title('Gaussian Process')
+    axis_3d.scatter(pH_obs.flatten(), Temperature_obs.flatten(), efficiency_obs, color='r', s=50, label='Observations') # type: ignore
+    axis_3d.set_xlabel('pH')
+    axis_3d.set_ylabel('Temperature')
+    axis_3d.set_zlabel('Efficiency') # type: ignore
+    axis_3d.set_title('Gaussian Process')
     
-    axis.legend()
+    axis_3d.legend()
+    
+    # Plot the pH and temperature slices
+    axis_ph.plot(pH_range, mu[0], color='royalblue', label='Mean')
+    axis_ph.fill_between(pH_range, mu[0] - 1.96 * sigma[0], mu[0] + 1.96 * sigma[0], color='blue', alpha=0.5, label='95% CI')
+    axis_ph.scatter(pH_obs.flatten(), efficiency_obs, color='r', s=50, label='Observations') # type: ignore
+    axis_ph.set_xlabel('pH')
+    axis_ph.set_ylabel('Efficiency')
+    axis_ph.set_title('pH Slice at Temperature = 0')
+    
+    axis_temp.plot(temperature_range, mu[:, -1], color='royalblue', label='Mean')
+    axis_temp.fill_between(temperature_range, mu[:, -1] - 1.96 * sigma[:, -1], mu[:, -1] + 1.96 * sigma[:, -1], color='blue', alpha=0.5, label='95% CI')
+    axis_temp.scatter(Temperature_obs.flatten(), efficiency_obs, color='r', s=50, label='Observations') # type: ignore
+    axis_temp.set_xlabel('Temperature')
+    axis_temp.set_ylabel('Efficiency')
+    axis_temp.set_title('Temperature Slice at pH = 11')
     
     # Get the acquisition function values
     acq_function = optimizer.acquisition_function
@@ -115,7 +136,7 @@ if __name__ == '__main__':
     optimizer.maximize(init_points=2, n_iter=0)
     
     # run the optimization process for 10 iterations
-    for _ in range(10):
+    for _ in range(20):
         optimizer.maximize(init_points=0, n_iter=1)
         plot_gp(optimizer, pH_mesh, temperature_mesh)
     
